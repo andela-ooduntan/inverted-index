@@ -1,6 +1,6 @@
 var invertedIndex = function () {
     this.dictionary = {};
-    this.stopingWords = ['an','of','and','in','the'];
+    this.stopingWords = ['an','of','and','in','the','a'];
     this.bookObject;
 }
 invertedIndex.prototype = {
@@ -37,20 +37,29 @@ invertedIndex.prototype = {
   },
   getIndex : function () {
     // body...
+    let parentObj = this;
     this.bookObject.forEach(function (value, index) {
       // body...
-      var purifiedWords = this.purifyString(value);
-      purifiedWords[0].forEach(function () {
+      var purifiedWords = parentObj.purifyString(value);
+      purifiedWords.forEach(function (titleString,arrayIndex) {
         // body...
-        if (dictionary.hasOwnProperty) {}
+       if (parentObj.dictionary.hasOwnProperty(titleString)) {
+        //let result = [index];
+        parentObj.dictionary[titleString].push(index);
+        } else {
+          parentObj.dictionary[titleString] = [index];
+       //  //let result = [index]; && [index] === parentObj.dictionary[titleString]
+       //  console.log(parentObj.dictionary[titleString]);
+       //  parentObj.dictionary[titleString].push(index);
+        }
       });
 
     });
-
+    return parentObj.dictionary
   },
   purifyString : function (value) {
-    let textString = value.text.toLowerCase().replace(/(\.|\,|\:|\;|\-)/g, '').split(/\s/);
-    let titleString = value.title.toLowerCase().replace(/(\.|\,|\:|\;|\-)/g, '').split(/\s/);
-    return [titleString,textString];
+    var allWordString = value.text +' '+ value.title;
+    let textString = allWordString.toLowerCase().replace(/(\.|\,|\:|\;|\-)/g, '').split(/\s/);
+    return textString;
   } 
 }
