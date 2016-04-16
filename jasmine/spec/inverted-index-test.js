@@ -57,8 +57,8 @@ describe('Read book data', function () {
     });
 
     it('Verifies the index maps the string keys to the correct objects in the JSON array', function () {
-      //console.log(indexObj);
-      expect(indexObj.dictionary.ring).toEqual([[1,['TL',44]],[1,['TX',82]]]);
+      console.log(indexObj);
+      expect(indexObj.dictionary.ring).toEqual([ [ 1, [ 'TL', 16 ] ], [ 1, [ 'TL', 44 ] ], [ 1, [ 'TX', 82 ] ] ]);
     });
   });
   
@@ -67,6 +67,26 @@ describe('Read book data', function () {
     it('verifies that searching the index returns an array of the indices of the correct objects that contain the words in the search query',function () {
       // body...
       expect(indexObj.searchIndex('alice')).toEqual([ [ [ 0, [ 'TL', 0 ] ], [ 0, [ 'TX', 0 ] ] ] ] )
+
+    })
+
+    it('verifies that searching the index returns an array empty array when searched with words not in the index',function () {
+      // body...
+      expect( indexObj.searchIndex('segun')).toEqual([[]])
+
+    })
+     it('verifies that searching the index returns an array empty array when searched with words not in the index',function () {
+      // body...
+      expect(indexObj.searchIndex('segun','tobi','wonderland')).toEqual([ 
+                  [  ], 
+                  [  ], 
+                  [ [ 0, [ 'TL', 9 ] ] ]
+                 ])
+
+    })
+    it('verifies that searching the index returns an array empty array when searched with words not in the index',function () {
+      // body...
+      expect(indexObj.searchIndex(['Rings','Yemi'],'yemi')).toEqual([ [ [ 1, [ 'TL', 16 ] ], [ 1, [ 'TL', 44 ] ], [ 1, [ 'TX', 82 ] ] ], [  ], [  ] ] )
 
     })
   })

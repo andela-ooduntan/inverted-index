@@ -1,5 +1,8 @@
+'use strict';
+
 var invertedIndex = function () {
     this.dictionary = {};
+    this.searchResult = [];
     this.stopingWords = ['an','of','and','in','the','a'];
 }
 invertedIndex.prototype = {
@@ -51,9 +54,9 @@ invertedIndex.prototype = {
     //console.log(bookObject)
     bookObject.forEach(function (value, index) {
       // body...
-      var purifiedTitle = parentObj.purifyString(value.title);
+      var purifiedTitle = parentObj.purifyBookString(value.title);
       parentObj.populateDictionary(purifiedTitle,'TL', index);
-      var purifiedText = parentObj.purifyString(value.text);
+      var purifiedText = parentObj.purifyBookString(value.text);
       parentObj.populateDictionary(purifiedText,'TX',index);
 
     });
@@ -62,19 +65,16 @@ invertedIndex.prototype = {
   populateDictionary: function (wordsArray,location,index) {
     // body...
     var parentObj = this;
-    var space = 0;
+    var stringPosition = 0;
     //console.log(wordsArray);
           wordsArray.forEach(function (titleString,arrayIndex) {
         // body...
-        if (arrayIndex !== 0 ) {
-          prevWordPos = arrayIndex-1;
-          space+=wordsArray[prevWordPos].length+1;
-        }else{
-          prevWordPos = false;
+        titleString = titleString.replace(/[s\z]/,'');
+        if ( arrayIndex !== 0 ) {
+          stringPosition+=wordsArray[arrayIndex-1].length+1;
         }
-
-        if (prevWordPos !== false) {
-          var result = [index,[location,space]];
+        if ( arrayIndex-1 >= 0 ) {
+          var result = [index,[location,stringPosition]];
         }else{
           var result = [index,[location,0]];
         }
@@ -108,21 +108,47 @@ invertedIndex.prototype = {
       return true;
     }
   },
-  purifyString : function (allWordString) {
-    let textString = allWordString.toLowerCase().replace(/(\.|\,|\:|\;|\-)/g, '').split(/\s/);
-    return textString;
+  purifyBookString : function ( allWordString ) {
+    let expresion = /[,";:?!@#$%(^)&*()_+|.><{}±=-]/g
+    allWordString = allWordString.toLowerCase();
+    allWordString = allWordString.replace(expresion, '');
+    allWordString = allWordString.split(/\s/);
+    return allWordString;
+  },
+  getSearchResult : function (argument) {
+    // body...
+    //argument = t
+        if ( this.dictionary[argument] ) {
+          this.searchResult.push(this.dictionary[argument]);
+        } else {
+          //console.log(tes);
+          this.searchResult.push([]);
+        }
+  },
+  cleanSearchQuery : function (word) {
+    // body...
+    word = word.toLowerCase();
+    word = word.replace(/[,";:?!@#$%(^)&*()_+|.><{}±=-]/g, '');
+    word = word.replace(/[s\z]/,'');
+    return word;
   },
   searchIndex : function () {
-    // body...
+
+      this.searchResult = [];
+    let parentObj = this;
     var args = Object.keys(arguments).length;
-    var searchResult = []
+    
     for (var i = 0; i < arguments.length; i++) {
-      
-      if (this.dictionary[arguments[i]]) {
-        searchResult.push(this.dictionary[arguments[i]]);
+      if ( arguments[i] instanceof Array ) {
+        arguments[i].forEach(function (value) {
+          // body...
+          parentObj.getSearchResult(parentObj.cleanSearchQuery(value));
+        });
+      } else {
+         parentObj.getSearchResult(parentObj.cleanSearchQuery(arguments[i]));
       }
     }
     //console.log()
-    return searchResult;
+    return this.searchResult;
   } 
 }
