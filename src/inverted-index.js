@@ -1,154 +1,228 @@
-'use strict';
+(function () {
+   'use strict';
+}());
 
+/**
+ * The constructor of invertedInedx.
+ */
 var invertedIndex = function () {
     this.dictionary = {};
     this.searchResult = [];
-    this.stopingWords = ['an','of','and','in','the','a'];
-}
+};
+/* The properties of the invertedIndex object. */
 invertedIndex.prototype = {
-    createIndex : function (filepath,callback) {
-      var parentProp=this;
-    this.readJSONfile(filepath,function (jsonData) {
-      // body...
-      parentProp.getIndex(jsonData);
-      
-      callback(jsonData);
+  // Creates the JSON object from the JSON file {filepath} and send the JSON object to the callback function
+    createIndex : function ( filepath,callback ) {
+      var parentProp = this;
+      // Call the function that read the JSON file asyn.
+    this.readJSONfile( filepath,function ( jsonData ) {
+      //Call the function that helps create the index of the file
+      parentProp.getIndex( jsonData );
+      callback( jsonData );
     });
             
     },
-    readJSONfile:function (filepath,callback) {
-      // body...
-    var that = this;
-    let xmlhttp;
-    if (window.XMLHttpRequest) {
+    // Reads the JSON file async.
+    readJSONfile : function ( filepath , callback ) {
+    var parentProp = this;
+    var xmlhttp;
+    // Checking if the browser have a built-in XMLHttpRequest object.
+    if ( window.XMLHttpRequest ) {
       xmlhttp = new XMLHttpRequest();
     } else {
-      //for old browser
+      // For browser that don't support XMLHttpRequest
       xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
     }
 
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState === 4) {
         if (xmlhttp.status === 200 ) {
-          that.bookObject = JSON.parse(xmlhttp.responseText);
-          //done()
-          callback(that.bookObject);
+          parentProp.bookObject = JSON.parse(xmlhttp.responseText);
+          callback(parentProp.bookObject);
         } else {
           console.error('An error has occured making the request');
           return false;
         }
       }
     };
-    //console.log(that.bookObject)
     xmlhttp.open('GET', filepath, true);
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
     xmlhttp.send();
     },
-  isJsonEmpty: function (){
-    //console.log (this.bookObject);
-    return Object.keys(this.bookObject).length === 0;
-  },
+  /**
+   * Creates an index of the sentence in the JSON object passed to it. 
+   * @param  {JSON Object} The document JSON object 
+   * @return {JSON Object} Then index of the document.
+   */
   getIndex : function (bookObject) {
-    // body...
+
     var parentObj = this;
-    //console.log(bookObject)
-    bookObject.forEach(function (value, index) {
-      // body...
-      var purifiedTitle = parentObj.purifyBookString(value.title);
+
+    bookObject.forEach( function (value, index) {
+      /* Analysises the document by tokenization and normalization. */
+      var purifiedTitle = parentObj.purifyString(value.title);
+      purifiedTitle = parentObj.splitSentence(purifiedTitle);
       parentObj.populateDictionary(purifiedTitle,'TL', index);
-      var purifiedText = parentObj.purifyBookString(value.text);
+      var purifiedText = parentObj.purifyString(value.text);
+      purifiedText = parentObj.splitSentence(purifiedText);
       parentObj.populateDictionary(purifiedText,'TX',index);
 
     });
-    return parentObj.dictionary
+
+    return parentObj.dictionary;
   },
-  populateDictionary: function (wordsArray,location,index) {
-    // body...
+  /**
+   * Add words to the dictionary object.
+   * @param  {Array} An array of words to be indexed.
+   * @param  {String} The location of the words in the doc. TX for text and TL for title.
+   * @param  {Int} The position of the words in the JSON object.
+   */
+  populateDictionary: function ( wordsArray,location,index ) {
+
     var parentObj = this;
-    var stringPosition = 0;
-    //console.log(wordsArray);
-          wordsArray.forEach(function (titleString,arrayIndex) {
-        // body...
-        titleString = titleString.replace(/[s\z]/,'');
-        if ( arrayIndex !== 0 ) {
-          stringPosition+=wordsArray[arrayIndex-1].length+1;
-        }
-        if ( arrayIndex-1 >= 0 ) {
-          var result = [index,[location,stringPosition]];
-        }else{
-          var result = [index,[location,0]];
-        }
-        //console.log(result[1][0]);
-       if (parentObj.dictionary.hasOwnProperty(titleString)  && parentObj.checkIfWordExist(parentObj.dictionary[titleString],result)) {
-          parentObj.dictionary[titleString].push(result);
-        
+    parentObj.stringPosition = 0;
+    
+
+      wordsArray.forEach( function (titleString,arrayIndex) {
+        /* Stemmed each word by removing trailing 's'. */ 
+        titleString = parentObj.stemWord(titleString);
+        /* Finds the location of the word in the doc. */
+        var wordIndex = parentObj.findWordIndex(arrayIndex,wordsArray,index,location);
+        /* Checks if the word exist in the index. */
+        if ( parentObj.dictionary.hasOwnProperty(titleString) && parentObj.checkIfWordExist(parentObj.dictionary[titleString],wordIndex) ) {
+
+          parentObj.dictionary[titleString].push(wordIndex);
+    
         } else {
-          parentObj.dictionary[titleString] = [result];
-       //  //let result = [index]; && [index] === parentObj.dictionary[titleString]
-       //  console.log(parentObj.dictionary[titleString]);
-       //  parentObj.dictionary[titleString].push(index);
+
+          parentObj.dictionary[titleString] = [wordIndex];       
         }
       });
   },
+  /**
+   * @param  {Int} The position of the word in the array after tokenization
+   * @param  {Array} The tokenized sentence.
+   * @param  {Int} The position of the sentence in the JSON object.
+   * @param  {String} The property location of the word in the JSON object. TX for text or TL for title.
+   * @return {Array} An array of the exact location of the word in the JSON object. 
+   * e.g [0, [TX,12]] '0' means the word is in the first JSON object and 
+   * 'TX' means the word is in the 'text' property and '12' means the word position in the doc. is 12.
+   */
+  findWordIndex : function (positionInArray,wordsArray,positionInDoc,locationInDoc) {
+    var wordLocation = null;
+    if ( positionInArray !== 0 ) {
+          this.stringPosition += wordsArray[positionInArray-1].length+1;
+        }
+        if ( positionInArray-1 >= 0 ) {
+           wordLocation = [positionInDoc,[locationInDoc,this.stringPosition]];
+        }else{
+           wordLocation = [positionInDoc,[locationInDoc,0]];
+        }
+        return wordLocation;
+  },
+  /**
+   * Checks if a word exist in the index.
+   * @param  {Array} The location of previous words in the index
+   * @param  {Array} The location of the queried word.
+   * @return {Boolean} True if word exist and otherwise false.
+   */
   checkIfWordExist : function (array,searchTerm) {
-    // body...
     var wordExisted=false;
+
     for (var counter = 0; counter < array.length;  counter++) {
-      // body...
-      //console.log(searchTerm[1][0]);
-      //console.log(value[1][0]);
       if ( array[counter].join() === searchTerm.join() ) {
         wordExisted = true;
         break;
       }
     }
+
     if ( wordExisted ) {
       return false;
     } else {
       return true;
     }
   },
-  purifyBookString : function ( allWordString ) {
-    let expresion = /[,";:?!@#$%(^)&*()_+|.><{}±=-]/g
+  /**
+   * Removes all alphanumeric character from a string and change to lower case (Normalization).
+   * @param  {String} The string to cleaned.
+   * @return {String} The cleaned string.
+   */
+  purifyString : function ( allWordString ) {
     allWordString = allWordString.toLowerCase();
-    allWordString = allWordString.replace(expresion, '');
-    allWordString = allWordString.split(/\s/);
+    allWordString = allWordString.replace(/[,";:?!@#$%(^)&*()_+|.><{}±=-]/g, '');
     return allWordString;
   },
-  getSearchResult : function (argument) {
-    // body...
-    //argument = t
-        if ( this.dictionary[argument] ) {
-          this.searchResult.push(this.dictionary[argument]);
-        } else {
-          //console.log(tes);
-          this.searchResult.push([]);
-        }
+  /**
+   * Splits a sentence into an array (Tokenization)
+   * @param  {String}
+   * @return {Array}
+   */
+  splitSentence : function ( sentence ) {
+    return sentence.split(/\s/);
   },
-  cleanSearchQuery : function (word) {
-    // body...
-    word = word.toLowerCase();
-    word = word.replace(/[,";:?!@#$%(^)&*()_+|.><{}±=-]/g, '');
-    word = word.replace(/[s\z]/,'');
-    return word;
-  },
-  searchIndex : function () {
+  /**
+   * Searches the index and pushes the result into searchResult property.
+   * @param  {Mixed} The argument can either be an array or a String.
+   */
+  getSearchResult : function ( searchTerm ) {
+    /* Checks if the search term is an array. */
+    if ( searchTerm instanceof Array ) {
+      /* Loops through an array of search term. */
+      searchTerm.forEach(function (value) {
+        /* Search each element of an array of search term (Recursion). */
+        parentObj.getSearchResult(value);
+      }); 
 
-      this.searchResult = [];
-    let parentObj = this;
-    var args = Object.keys(arguments).length;
-    
-    for (var i = 0; i < arguments.length; i++) {
-      if ( arguments[i] instanceof Array ) {
-        arguments[i].forEach(function (value) {
-          // body...
-          parentObj.getSearchResult(parentObj.cleanSearchQuery(value));
-        });
+    }else {
+      /* Search term is a String */
+      searchTerm = parentObj.purifyString(searchTerm);
+      searchTerm = parentObj.stemWord(searchTerm);
+      /* Checks if search term is a sentence. */
+      if (parentObj.splitSentence(searchTerm).length > 1) {
+        /* Searches each words in the sentence. */
+        parentObj.getSearchResult(parentObj.splitSentence(searchTerm));
       } else {
-         parentObj.getSearchResult(parentObj.cleanSearchQuery(arguments[i]));
+        /* Search term is a word. */
+        if ( parentObj.dictionary[searchTerm] ) {
+          parentObj.searchResult.push(parentObj.dictionary[searchTerm]);
+        } else {
+          /* Pushes an empty array for words not in the index. */
+          parentObj.searchResult.push([]);
+        }
       }
     }
-    //console.log()
+  },
+  /**
+   * Stems words to their root form. Works only with 'S' for now.
+   * @param  {String} Word with trailing 'S'.
+   * @return {String} Root form of word.
+   */
+  stemWord : function (word) {
+    return word.replace(/[s\z]/,'');
+  },
+  /**
+   * Searches for the index for a match with the search term.
+   * @return {Array} [Returns the location of the match found in an array]
+   */
+  searchIndex : function () {
+
+    parentObj = this;
+    this.searchResult = [];
+    
+    for (var i = 0; i < arguments.length; i++) {
+      /* Checks if the search term is an array. */
+      if ( arguments[i] instanceof Array ) {
+        arguments[i].forEach(this.getSearchResult);
+      } else {
+        /* Checks if the search term is a sentence. */
+        if ( this.splitSentence(arguments[i]).length > 1 ) {
+          this.getSearchResult(this.splitSentence(arguments[i]));
+      } else {
+         this.getSearchResult(this.purifyString(this.stemWord(arguments[i])));
+       }
+      }
+    }
+
     return this.searchResult;
   } 
-}
+};
