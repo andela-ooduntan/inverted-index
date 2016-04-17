@@ -52,12 +52,19 @@ describe('Read book data', function () {
 
     it('Verifies the index maps the string keys to the correct objects in the JSON array', function () {
       /* Checks if the index key maps to the correct object and position in the JSON array */
-      expect(indexObj.dictionary.alice).toEqual([[0,['TL',0]],[0,['TX',0]]]);
+      expect(indexObj.dictionary.alice).toEqual([
+        [0,['TL',0]],
+        [0,['TX',0]]
+        ]);
     });
 
     it('Verifies the index maps the string keys to the correct objects in the JSON array', function () {
       /* Checks if the index key maps to the correct object and position in the JSON array */
-      expect(indexObj.dictionary.ring).toEqual([ [ 1, [ 'TL', 16 ] ], [ 1, [ 'TL', 44 ] ], [ 1, [ 'TX', 82 ] ] ]);
+      expect(indexObj.dictionary.ring).toEqual([ 
+        [ 1, [ 'TL', 16 ] ],
+        [ 1, [ 'TL', 44 ] ], 
+        [ 1, [ 'TX', 82 ] ] 
+      ]);
     });
   });
   
