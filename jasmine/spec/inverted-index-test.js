@@ -22,21 +22,6 @@ describe('Read book data', function () {
     // This spec checks if the JSON object is an object. 
     expect(typeof indexObj.bookObject[0].title).toBe('string');
   });
-
-  it('verifies that the text of the first object property in the array is of type string', function() {
-    // This spec checks if the JSON object properties contain a string. 
-    expect(typeof indexObj.bookObject[0].text).toBe('string');
-  });
-
-  it('verifies that the title of the second object property in the array is of type string', function() {
-    // This spec checks if the JSON object properties contain a string. 
-    expect(typeof indexObj.bookObject[1].title).toBe('string');
-  });
-
-  it('verifies that the text of the second object property in the array is of type string', function() {
-    // This spec checks if the JSON object properties contain a string. 
-    expect(typeof indexObj.bookObject[1].text).toBe('string');
-  });
 });
 
 describe('Populate Index',function() {
@@ -73,7 +58,6 @@ describe('Populate Index',function() {
 describe('Search index',function () {
 
   it('verifies that searching the index returns an array of the indices of the correct objects that contain the words in the search query',function () {
-    // Verifies if searching the index returns an array of the indices of the correct objects that contain the words in the search query. 
     expect(indexObj.searchIndex('alice')).toEqual([
         [ 
           [0,'TL', 0], 
@@ -135,7 +119,15 @@ describe('Search index',function () {
 
   });
 
-  var testArray = [ 'lord', 'wonderland', 'enters',['destroy', 'ring', 'seek', 'alliance',['alice', 'rings',['imagination', 'hole', 'rabbit',['world', 'elf', 'dwarf', 'hobbit']]]], 'wizard'];
+  var testArray = [ 'lord', 'wonderland', 'enters',
+                    ['destroy', 'ring', 'seek', 'alliance',
+                      ['alice', 'rings',
+                        ['imagination', 'hole', 'rabbit',
+                          ['world', 'elf', 'dwarf', 'hobbit']
+                        ]
+                      ]
+                    ], 
+                  'wizard'];
 
   it('Ensures search does not take too long to execute ',function () {
         // Checks if search can handle a sentences 
