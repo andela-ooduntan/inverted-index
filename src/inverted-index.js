@@ -81,20 +81,20 @@ InvertedIndex.prototype.populateDictionary = function ( wordsArray,location,inde
   var parentObj = this;
   parentObj.stringPosition = 0;
 
-  wordsArray.forEach( function (titleString,arrayIndex) {
+  wordsArray.forEach( function (eachString,arrayIndex) {
     // Stemmed each word by removing trailing 's'. 
-    titleString = parentObj.stemWord(titleString);
+    eachString = parentObj.stemWord(eachString);
     // Finds the location of the word in the doc. 
     var wordIndex = parentObj.findWordIndex(arrayIndex,wordsArray,index,location);
-    var wordInfoInIndex = parentObj.dictionary[titleString];
+    var wordInfoInIndex = parentObj.dictionary[eachString];
     // Checks if the word exist in the index. 
-    if ( parentObj.dictionary.hasOwnProperty(titleString) && parentObj.checkIfWordExist( wordInfoInIndex,wordIndex) ) {
+    if ( parentObj.dictionary.hasOwnProperty(eachString) && parentObj.checkIfWordExist( wordInfoInIndex,wordIndex) ) {
 
-      parentObj.dictionary[titleString].push(wordIndex);
+      parentObj.dictionary[eachString].push(wordIndex);
 
     } else {
 
-      parentObj.dictionary[titleString] = [wordIndex];       
+      parentObj.dictionary[eachString] = [wordIndex];       
     }
   });
 };
@@ -221,7 +221,7 @@ InvertedIndex.prototype.searchIndex = function () {
       if ( this.splitSentence(arguments[i]).length > 1 ) {
         this.getSearchResult(this.splitSentence(arguments[i]));
     } else {
-       this.getSearchResult(this.purifyString(this.stemWord(arguments[i])));
+       this.getSearchResult(this.stemWord(arguments[i]));
      }
     }
   }
