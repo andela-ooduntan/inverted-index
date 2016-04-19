@@ -134,4 +134,45 @@ describe('Search index',function () {
       ]  );
 
   });
+
+  var testArray = [ 'lord', 'wonderland', 'enters',['destroy', 'ring', 'seek', 'alliance',['alice', 'rings',['imagination', 'hole', 'rabbit',['world', 'elf', 'dwarf', 'hobbit']]]], 'wizard'];
+
+  it('Ensures search does not take too long to execute ',function () {
+        // Checks if search can handle a sentences 
+    var expectedResult = [ 
+                            [ [ 1, 'TL', 4 ] ], 
+                            [ [ 0, 'TL', 9 ] ], 
+                            [ [ 0, 'TX', 35 ] ], 
+                            [ [ 1, 'TX', 63 ] ], 
+                            [ 
+                              [ 1, 'TL', 16 ], 
+                              [ 1, 'TL', 44 ], 
+                              [ 1, 'TX', 82 ] 
+                            ], 
+                            [ [ 1, 'TX', 55 ] ], 
+                            [ [ 1, 'TX', 11 ] ], 
+                            [ 
+                              [ 0, 'TL', 0 ], 
+                              [ 0, 'TX', 0 ] 
+                            ], 
+                            [ 
+                              [ 1, 'TL', 16 ], 
+                              [ 1, 'TL', 44 ], 
+                              [ 1, 'TX', 82 ] 
+                            ], 
+                            [ [ 0, 'TX', 58 ] ], 
+                            [ [ 0, 'TX', 26 ] ], 
+                            [ [ 0, 'TX', 19 ] ], 
+                            [ [ 0, 'TX', 44 ] ], 
+                            [ [ 1, 'TX', 27 ] ], 
+                            [ [ 1, 'TX', 31 ] ], 
+                            [ [ 1, 'TX', 48 ] ], 
+                            [ [ 1, 'TX', 37 ] ] 
+                          ];
+    expect(indexObj.searchIndex( testArray )).toEqual(expectedResult);
+
+  });
 });
+
+
+

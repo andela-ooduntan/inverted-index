@@ -18,7 +18,7 @@ InvertedIndex.prototype.createIndex = function ( filepath,callback ) {
   this.readJSONfile( filepath,function ( jsonData ) {
     // Call the function that helps create the index of the file 
     parentProp.getIndex( jsonData );
-    callback( );
+    callback();
   });
         
 };
@@ -105,7 +105,7 @@ InvertedIndex.prototype.populateDictionary = function ( wordsArray,location,inde
  * @param  {String} The property location of the word in the JSON object. TX for text or TL for title.
  * @return {Array} An array of the exact location of the word in the JSON object. 
  * e.g [0,TX,12] '0' means the word is in the first JSON object and 
- * 'TX' means the word is in the 'text' property and '12' means the word position in the doc. is 12.
+ * 'TX' means the word is in the 'text' property and '12' is the word position in the doc.
  */
 InvertedIndex.prototype.findWordIndex = function (positionInArray,wordsArray,positionInDoc,locationInDoc) {
   var wordLocation = null;
