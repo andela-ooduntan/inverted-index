@@ -1,14 +1,15 @@
-{
-  "node": true,
-  "esversion": 6 ,
-  "browser": true, 
-  "unused": true,
-  // JSHint Default Configuration File (as on JSHint website)
+  {
+
+    // JSHint Default Configuration File (as on JSHint website)
     // See http://jshint.com/docs/ for more details
 
     "maxerr"        : 50,       // {int} Maximum error before stopping
 
     // Enforcing
+    "node": true,
+    "esversion": 6 ,
+    "browser": true, 
+    "unused": true,
     "bitwise"       : true,     // true: Prohibit bitwise operators (&, |, ^, etc.)
     "camelcase"     : false,    // true: Identifiers must be in camelCase
     "curly"         : true,     // true: Require {} for every new block or scope
