@@ -16,5 +16,5 @@ invertedObject.searchIndex(['Your','search'['more','search','term'],'term'],'eve
 
 ## Tests
 
-Run the SpecRunner.html on your local sever.s
+Run the SpecRunner.html on your local sever.
 
