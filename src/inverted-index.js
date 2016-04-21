@@ -40,13 +40,9 @@ class InvertedIndex {
 
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-        // if () {  
           this.bookObject = JSON.parse(xmlhttp.responseText);
           callback(this.bookObject);
-        } else {
-          console.error ('An error has occured making the request');
-          return false;
-        }
+        } 
       
     }.bind(this);
     xmlhttp.open ('GET', filepath, true);
@@ -82,10 +78,10 @@ class InvertedIndex {
    * TX for text and TL for title.
    * @param  {Int} The position of the words in the JSON object.
    */
-  populateDictionary(wordsArray,location,index) {
+  populateDictionary(wordsArray, location, index) {
     this.stringPosition = 0;
 
-    wordsArray.forEach((eachString,arrayIndex) => {
+    wordsArray.forEach((eachString, arrayIndex) => {
       // Stemmed each word by removing trailing 's'. 
       eachString = this.stemWord(eachString);
 
@@ -95,7 +91,7 @@ class InvertedIndex {
       var checkProperty = this.dictionary.hasOwnProperty(eachString);
 
       // Checks if the word exist in the index. 
-      if (checkProperty && this.checkIfWordExist( wordProperty,wordIndex)) {
+      if (checkProperty && this.checkIfWordExist(wordProperty,wordIndex)) {
 
         this.dictionary[eachString].push(wordIndex);
 
@@ -116,7 +112,7 @@ class InvertedIndex {
    * JSON object. e.g [0,TX,12] '0' means the word is in the first JSON object and
    * 'TX' means the word is in the 'text' property and '12' is the word position in the doc.
    */
-  findWordIndex(positionInArray,wordsArray,positionInDoc,locationInDoc) {
+  findWordIndex(positionInArray, wordsArray, positionInDoc, locationInDoc) {
     var wordLocation = null;
 
     if (positionInArray) {
@@ -135,7 +131,7 @@ class InvertedIndex {
    * @param  {Array} The location of the queried word.
    * @return {Boolean} True if word exist and otherwise false.
    */
-  checkIfWordExist(array,searchTerm) {
+  checkIfWordExist(array, searchTerm) {
     for (var counter = 0; counter < array.length;  counter++) {
       if (array[counter].join() === searchTerm.join()) {
         return false;
