@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * The constructor of invertedInedx.
+ * The invertedInedx class.
 */
 class InvertedIndex {
   constructor(){
@@ -17,7 +17,7 @@ class InvertedIndex {
     var parentProp = this;
 
     // Call the function that read the JSON file asyn. 
-    this.readJSONfile( filepath,function (jsonData) {
+    this.readJSONfile( filepath,function(jsonData) {
       // Call the function that helps create the index of the file 
       parentProp.getIndex(jsonData);
       callback ();
@@ -38,8 +38,8 @@ class InvertedIndex {
       xmlhttp = new window.ActiveXObject ('Microsoft.XMLHTTP');
     }
 
-    xmlhttp.onreadystatechange = function () {
-      if ( xmlhttp.readyState === 4 ) {
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState === 4) {
         if (xmlhttp.status === 200 ) {
           this.bookObject = JSON.parse(xmlhttp.responseText);
           callback(this.bookObject);
@@ -77,7 +77,8 @@ class InvertedIndex {
     /**
    * Add words to the dictionary object.
    * @param  {Array} An array of words to be indexed.
-   * @param  {String} The location of the words in the doc. TX for text and TL for title.
+   * @param  {String} The location of the words in the doc. 
+   * TX for text and TL for title.
    * @param  {Int} The position of the words in the JSON object.
    */
   populateDictionary(wordsArray,location,index) {
@@ -108,9 +109,10 @@ class InvertedIndex {
    * @param  {Int} The position of the word in the array after tokenization
    * @param  {Array} The tokenized sentence.
    * @param  {Int} The position of the sentence in the JSON object.
-   * @param  {String} The property location of the word in the JSON object. TX for text or TL for title.
-   * @return {Array} An array of the exact location of the word in the JSON object. 
-   * e.g [0,TX,12] '0' means the word is in the first JSON object and 
+   * @param  {String} The property location of the word in the JSON object. 
+   * TX for text or TL for title.
+   * @return {Array} An array of the exact location of the word in the  
+   * JSON object. e.g [0,TX,12] '0' means the word is in the first JSON object and
    * 'TX' means the word is in the 'text' property and '12' is the word position in the doc.
    */
   findWordIndex(positionInArray,wordsArray,positionInDoc,locationInDoc) {

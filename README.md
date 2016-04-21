@@ -16,5 +16,14 @@ invertedObject.searchIndex(['Your','search'['more','search','term'],'term'],'eve
 
 ## Tests
 
-Run the SpecRunner.html on your local sever.
+Run the SpecRunner.html on your sever.
 
+
+## Contributors
+
+You can fork and contribute/improve this project by submitting a pull request.
+
+
+## License
+
+The source code is open-sourced software licensed under the [MIT license](LICENSE.md)
