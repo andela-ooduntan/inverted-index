@@ -57,7 +57,8 @@ describe('Populate Index',function() {
   
 describe('Search index',function () {
 
-  it('verifies that searching the index returns an array of the indices of the correct objects that contain the words in the search query',function () {
+  it('verifies that searching the index returns an array of the indices of the correct'+
+   'objects that contain the words in the search query',function () {
     expect(indexObj.searchIndex('alice')).toEqual([
         [ 
           [0,'TL', 0], 
@@ -67,8 +68,10 @@ describe('Search index',function () {
 
   });
 
-  it('verifies that searching the index returns an array empty array when searched with words not in the index',function () {
-    // Verifies if searching the index returns an array of the indices of the correct objects that contain the words in the search query. 
+  it('verifies that searching the index returns an array empty array when searched with '+
+    'words not in the index',function () {
+    // Verifies if searching the index returns an array of the indices of the correct objects
+    // that contain the words in the search query. 
     expect( indexObj.searchIndex('checkpoint')).toEqual([[]]);
 
   });
