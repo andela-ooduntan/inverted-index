@@ -4,7 +4,7 @@
  * The invertedInedx class.
 */
 class InvertedIndex {
-  constructor(){
+  constructor() {
     this.dictionary = {};
     this.searchResult = [];
     this.getSearchResult = this.getSearchResult.bind(this);
@@ -12,7 +12,7 @@ class InvertedIndex {
 
   // Creates the JSON object from the JSON file {filepath} and 
   // sends the JSON object to the callback function. 
-  createIndex(filepath,callback) {
+  createIndex(filepath, callback) {
     // FIXME: shouldn't save references to this
     var parentProp = this;
 
@@ -39,15 +39,15 @@ class InvertedIndex {
     }
 
     xmlhttp.onreadystatechange = function() {
-      if (xmlhttp.readyState === 4) {
-        if (xmlhttp.status === 200 ) {
+      if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        // if () {  
           this.bookObject = JSON.parse(xmlhttp.responseText);
           callback(this.bookObject);
         } else {
           console.error ('An error has occured making the request');
           return false;
         }
-      }
+      
     }.bind(this);
     xmlhttp.open ('GET', filepath, true);
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
@@ -59,6 +59,7 @@ class InvertedIndex {
    * @param  {JSON Object} The document JSON object 
    * @return {JSON Object} Then index of the document.
   */
+
   getIndex(bookObject) {
     bookObject.forEach((value, index) => {
       // Analyses the document by tokenization and normalization. 
@@ -119,7 +120,7 @@ class InvertedIndex {
     var wordLocation = null;
 
     if (positionInArray) {
-      this.stringPosition += wordsArray[positionInArray-1].length+1;
+      this.stringPosition += wordsArray[positionInArray - 1].length + 1;
       wordLocation = [positionInDoc,locationInDoc,this.stringPosition];
     } else {
       wordLocation = [positionInDoc,locationInDoc,0];
@@ -175,8 +176,8 @@ class InvertedIndex {
 
     } else {
       // Search term is a String 
-      searchTerm = this.purifyString( searchTerm );
-      searchTerm = this.stemWord( searchTerm );
+      searchTerm = this.purifyString(searchTerm);
+      searchTerm = this.stemWord(searchTerm);
 
       // Checks if search term is a sentence. 
       if (this.splitSentence(searchTerm).length > 1) {
@@ -200,7 +201,7 @@ class InvertedIndex {
    * @return {String} Root form of word.
    */
   stemWord(word) {
-    return word.replace(/[s\z]/,'');
+    return word.replace(/[s\z]/, '');
   }
 
   /**
@@ -209,7 +210,7 @@ class InvertedIndex {
    */
   searchIndex() {
     this.searchResult = [];
-    var argumentArray = Object.keys( arguments );
+    var argumentArray = Object.keys(arguments);
 
     argumentArray.forEach((argumentsKey) => {
 
