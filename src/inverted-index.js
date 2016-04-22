@@ -14,28 +14,26 @@ class InvertedIndex {
   // sends the JSON object to the callback function. 
   createIndex(filepath, callback) {
     // FIXME: shouldn't save references to this
-    var parentProp = this;
-
+    var _this = this;
     // Call the function that read the JSON file asyn. 
-    this.readJSONfile( filepath,function(jsonData) {
+    this.readJSONfile(filepath, function(jsonData) {
       // Call the function that helps create the index of the file 
-      parentProp.getIndex(jsonData);
-      callback ();
+      _this.getIndex(jsonData);
+      callback();
     });
           
   }
 
   // Reads the JSON file async.
-  readJSONfile(filepath , callback) {
+  readJSONfile(filepath, callback) {
     var xmlhttp = null;
 
     // Checking if the browser have a built-in XMLHttpRequest object.
     if (window.XMLHttpRequest) {
       xmlhttp = new XMLHttpRequest();
     } else {
-
       // For browser that don't support XMLHttpRequest 
-      xmlhttp = new window.ActiveXObject ('Microsoft.XMLHTTP');
+      xmlhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
     }
 
     xmlhttp.onreadystatechange = function() {
@@ -43,19 +41,18 @@ class InvertedIndex {
           this.bookObject = JSON.parse(xmlhttp.responseText);
           callback(this.bookObject);
         } 
-      
     }.bind(this);
-    xmlhttp.open ('GET', filepath, true);
+
+    xmlhttp.open('GET', filepath, true);
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
     xmlhttp.send();
   }
 
   /**
-   * Creates an index of the sentence in the JSON object passed to it. 
+   * Creates an index of the sentence of the JSON object passed to it. 
    * @param  {JSON Object} The document JSON object 
    * @return {JSON Object} Then index of the document.
   */
-
   getIndex(bookObject) {
     bookObject.forEach((value, index) => {
       // Analyses the document by tokenization and normalization. 
@@ -64,8 +61,8 @@ class InvertedIndex {
 
       purifiedTitle = this.splitSentence(purifiedTitle);
       purifiedText = this.splitSentence(purifiedText);
-      this.populateDictionary(purifiedTitle,'TL', index);
-      this.populateDictionary( purifiedText,'TX',index );
+      this.populateDictionary(purifiedTitle, 'TL', index);
+      this.populateDictionary(purifiedText, 'TX', index );
     });
 
     return this.dictionary;
@@ -86,17 +83,14 @@ class InvertedIndex {
       eachString = this.stemWord(eachString);
 
       // Finds the location of the word in the doc. 
-      var wordIndex = this.findWordIndex(arrayIndex,wordsArray,index,location);
+      var wordIndex = this.findWordIndex(arrayIndex, wordsArray, index, location);
       var wordProperty = this.dictionary[eachString];
       var checkProperty = this.dictionary.hasOwnProperty(eachString);
 
       // Checks if the word exist in the index. 
-      if (checkProperty && this.checkIfWordExist(wordProperty,wordIndex)) {
-
+      if (checkProperty && this.checkIfWordExist(wordProperty, wordIndex)) {
         this.dictionary[eachString].push(wordIndex);
-
       } else {
-
         this.dictionary[eachString] = [wordIndex];       
       }
     });
@@ -192,8 +186,9 @@ class InvertedIndex {
   }
 
   /**
-   * Stems words to their root form. Works only with 'S' for now.
-   * @param  {String} Word with trailing 'S'.
+   * FIXME: Doesnt stem word properly.
+   * Stems words to their root form. Works only with 's' for now.
+   * @param  {String} Word with trailing 's'.
    * @return {String} Root form of word.
    */
   stemWord(word) {
@@ -209,14 +204,12 @@ class InvertedIndex {
     var argumentArray = Object.keys(arguments);
 
     argumentArray.forEach((argumentsKey) => {
-
       // Checks if the search term is an array. 
       if (arguments[argumentsKey] instanceof Array) {
-        arguments[argumentsKey].forEach( this.getSearchResult );
+        arguments[argumentsKey].forEach(this.getSearchResult);
       } else {
-
         // Checks if the search term is a sentence. 
-        if (this.splitSentence(arguments[argumentsKey] ).length > 1) {
+        if (this.splitSentence(arguments[argumentsKey]).length > 1) {
           this.getSearchResult(this.splitSentence(arguments[argumentsKey]));
         } else {
          this.getSearchResult(this.stemWord(arguments[argumentsKey]));

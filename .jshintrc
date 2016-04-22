@@ -7,8 +7,6 @@
 
     // Enforcing
     "node": true,
-    "esversion": 6 ,
-    "browser": true, 
     "unused": true,
     "bitwise"       : true,     // true: Prohibit bitwise operators (&, |, ^, etc.)
     "camelcase"     : false,    // true: Identifiers must be in camelCase
@@ -47,7 +45,7 @@
     "boss"          : false,     // true: Tolerate assignments where comparisons would be expected
     "debug"         : false,     // true: Allow debugger statements e.g. browser breakpoints.
     "eqnull"        : false,     // true: Tolerate use of `== null`
-    "esversion"     : 5,         // {int} Specify the ECMAScript version to which the code must adhere.
+    "esversion"     : 6 ,        // {int} Specify the ECMAScript version to which the code must adhere.
     "moz"           : false,     // true: Allow Mozilla specific syntax (extends and overrides esnext features)
                                  // (ex: `for each`, multiple try/catch, function expression…)
     "evil"          : false,     // true: Tolerate use of `eval` and `new Function()`
@@ -90,7 +88,7 @@
     "worker"        : false,    // Web Workers
     "wsh"           : false,    // Windows Scripting Host
     "yui"           : false,    // Yahoo User Interface
-    "predef": [ "MY_GLOBAL" ]
+    "predef": [ "MY_GLOBAL" ],
     // Custom Globals
     "globals"       : {}        // additional predefined global variables
 }
