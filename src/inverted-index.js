@@ -1,8 +1,7 @@
 'use strict';
-
 /**
  * The invertedInedx class.
-*/
+ */
 class InvertedIndex {
   constructor() {
     this.dictionary = {};
@@ -21,7 +20,7 @@ class InvertedIndex {
       _this.getIndex(jsonData);
       callback();
     });
-          
+
   }
 
   // Reads the JSON file async.
@@ -38,9 +37,9 @@ class InvertedIndex {
 
     xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-          this.bookObject = JSON.parse(xmlhttp.responseText);
-          callback(this.bookObject);
-        } 
+        this.bookObject = JSON.parse(xmlhttp.responseText);
+        callback(this.bookObject);
+      }
     }.bind(this);
 
     xmlhttp.open('GET', filepath, true);
@@ -52,7 +51,7 @@ class InvertedIndex {
    * Creates an index of the sentence of the JSON object passed to it. 
    * @param  {JSON Object} The document JSON object 
    * @return {JSON Object} Then index of the document.
-  */
+   */
   getIndex(bookObject) {
     bookObject.forEach((value, index) => {
       // Analyses the document by tokenization and normalization. 
@@ -62,13 +61,13 @@ class InvertedIndex {
       purifiedTitle = this.splitSentence(purifiedTitle);
       purifiedText = this.splitSentence(purifiedText);
       this.populateDictionary(purifiedTitle, 'TL', index);
-      this.populateDictionary(purifiedText, 'TX', index );
+      this.populateDictionary(purifiedText, 'TX', index);
     });
 
     return this.dictionary;
   }
 
-    /**
+  /**
    * Add words to the dictionary object.
    * @param  {Array} An array of words to be indexed.
    * @param  {String} The location of the words in the doc. 
@@ -88,12 +87,12 @@ class InvertedIndex {
       if (checkProperty && this.checkIfWordExist(wordProperty, wordIndex)) {
         this.dictionary[eachString].push(wordIndex);
       } else {
-        this.dictionary[eachString] = [wordIndex];       
+        this.dictionary[eachString] = [wordIndex];
       }
     });
   }
 
-    /**
+  /**
    * @param  {Int} The position of the word in the array after tokenization
    * @param  {Array} The tokenized sentence.
    * @param  {Int} The position of the sentence in the JSON object.
@@ -109,22 +108,22 @@ class InvertedIndex {
 
     if (positionInArray) {
       this.stringPosition += wordsArray[positionInArray - 1].length + 1;
-      wordLocation = [positionInDoc,locationInDoc,this.stringPosition];
+      wordLocation = [positionInDoc, locationInDoc, this.stringPosition];
     } else {
-      wordLocation = [positionInDoc,locationInDoc,0];
+      wordLocation = [positionInDoc, locationInDoc, 0];
     }
 
     return wordLocation;
   }
 
-    /**
+  /**
    * Checks if a word exist in the index.
    * @param  {Array} The location of previous words in the index
    * @param  {Array} The location of the queried word.
    * @return {Boolean} True if word exist and otherwise false.
    */
   checkIfWordExist(array, searchTerm) {
-    for (var counter = 0; counter < array.length;  counter++) {
+    for (var counter = 0; counter < array.length; counter++) {
       if (array[counter].join() === searchTerm.join()) {
         return false;
       }
@@ -133,7 +132,7 @@ class InvertedIndex {
     return true;
   }
 
-    /**
+  /**
    * Removes all alphanumeric character from a string and change 
    * to lower case (Normalization).
    * @param  {String} The string to cleaned.
@@ -200,7 +199,7 @@ class InvertedIndex {
         if (this.splitSentence(arguments[argumentsKey]).length > 1) {
           this.getSearchResult(this.splitSentence(arguments[argumentsKey]));
         } else {
-         this.getSearchResult(arguments[argumentsKey]);
+          this.getSearchResult(arguments[argumentsKey]);
         }
       }
     });
