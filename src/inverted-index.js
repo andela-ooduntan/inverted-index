@@ -75,12 +75,12 @@ class InvertedIndex {
    * TX for text and TL for title.
    * @param  {Int} The position of the words in the JSON object.
    */
-  populateDictionary(wordsArray, location, index) {
+  populateDictionary(wordsArray, place, index) {
     this.stringPosition = 0;
 
     wordsArray.forEach((eachString, arrayIndex) => {
-      // Finds the location of the word in the doc. 
-      var wordIndex = this.findWordIndex(arrayIndex, wordsArray, index, location);
+      // Finds the location of the word in the doc.
+      var wordIndex = this.findWordIndex(arrayIndex, wordsArray, index, place);
       var wordProperty = this.dictionary[eachString];
       var checkProperty = this.dictionary.hasOwnProperty(eachString);
 
@@ -100,8 +100,9 @@ class InvertedIndex {
    * @param  {String} The property location of the word in the JSON object. 
    * TX for text or TL for title.
    * @return {Array} An array of the exact location of the word in the  
-   * JSON object. e.g [0,TX,12] '0' means the word is in the first JSON object and
-   * 'TX' means the word is in the 'text' property and '12' is the word position in the doc.
+   * JSON object. e.g [0,TX,12] '0' means the word is in the first 
+   * 'JSON object and TX' means the word is in the 'text' property 
+   * and '12' is the word position in the doc.
    */
   findWordIndex(positionInArray, wordsArray, positionInDoc, locationInDoc) {
     var wordLocation = null;
@@ -133,7 +134,8 @@ class InvertedIndex {
   }
 
     /**
-   * Removes all alphanumeric character from a string and change to lower case (Normalization).
+   * Removes all alphanumeric character from a string and change 
+   * to lower case (Normalization).
    * @param  {String} The string to cleaned.
    * @return {String} The cleaned string.
    */
