@@ -79,9 +79,6 @@ class InvertedIndex {
     this.stringPosition = 0;
 
     wordsArray.forEach((eachString, arrayIndex) => {
-      // Stemmed each word by removing trailing 's'. 
-      eachString = this.stemWord(eachString);
-
       // Finds the location of the word in the doc. 
       var wordIndex = this.findWordIndex(arrayIndex, wordsArray, index, location);
       var wordProperty = this.dictionary[eachString];
@@ -167,7 +164,6 @@ class InvertedIndex {
     } else {
       // Search term is a String 
       searchTerm = this.purifyString(searchTerm);
-      searchTerm = this.stemWord(searchTerm);
 
       // Checks if search term is a sentence. 
       if (this.splitSentence(searchTerm).length > 1) {
@@ -183,16 +179,6 @@ class InvertedIndex {
         }
       }
     }
-  }
-
-  /**
-   * FIXME: Doesnt stem word properly.
-   * Stems words to their root form. Works only with 's' for now.
-   * @param  {String} Word with trailing 's'.
-   * @return {String} Root form of word.
-   */
-  stemWord(word) {
-    return word.replace(/[s\z]/, '');
   }
 
   /**
@@ -212,7 +198,7 @@ class InvertedIndex {
         if (this.splitSentence(arguments[argumentsKey]).length > 1) {
           this.getSearchResult(this.splitSentence(arguments[argumentsKey]));
         } else {
-         this.getSearchResult(this.stemWord(arguments[argumentsKey]));
+         this.getSearchResult(arguments[argumentsKey]);
         }
       }
     });
