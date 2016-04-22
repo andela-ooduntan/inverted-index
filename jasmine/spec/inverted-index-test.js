@@ -33,23 +33,23 @@ describe('Populate Index', function() {
 
   it('Verifies the index maps the string keys to the correct objects in the JSON array', function() {
     // Checks if the index key maps to the correct object and position in the JSON array 
-    expect(indexObj.dictionary.wonderland).toEqual([[0,'TL',9]]);
+    expect(indexObj.dictionary.wonderland).toEqual([[0, 'TL', 9]]);
   });
 
   it('Verifies the index maps the string keys to the correct objects in the JSON array', function() {
     // Checks if the index key maps to the correct object and position in the JSON array 
     expect(indexObj.dictionary.alice).toEqual([
-      [0,'TL',0],
-      [0,'TX',0]
+      [0, 'TL', 0],
+      [0, 'TX', 0]
       ]);
   });
 
   it('Verifies the index maps the string keys to the correct objects in the JSON array', function() {
     // Checks if the index key maps to the correct object and position in the JSON array 
     expect(indexObj.dictionary.ring).toEqual([ 
-      [1,'TL',16],
-      [1,'TL',44], 
-      [1,'TX',82] 
+      [1, 'TL', 16],
+      [1, 'TL', 44], 
+      [1, 'TX', 82] 
     ]);
   });
 });
@@ -60,8 +60,8 @@ describe('Search index', function() {
    'objects that contain the words in the search query', function() {
     expect(indexObj.searchIndex('alice')).toEqual([
         [ 
-          [0,'TL', 0], 
-          [0,'TX', 0] 
+          [0, 'TL', 0], 
+          [0, 'TX', 0] 
         ]
       ] );
 
@@ -78,10 +78,10 @@ describe('Search index', function() {
   it('Ensure searchIndex can handle a varied number of search terms as arguments.', function() {
     // Checks if search can handle varying number of arguments 
     expect(indexObj.searchIndex('segun','tobi','wonderland')).toEqual([ 
-      [  ], 
-      [  ], 
+      [], 
+      [], 
       [ 
-        [0,'TL',9] 
+        [0, 'TL', 9] 
       ]
     ]);
 
@@ -91,15 +91,15 @@ describe('Search index', function() {
     // Checks if search can handle more complex arguments. 
     expect(indexObj.searchIndex(['Rings','Yemi',['in','fall']],'yemi','stephen')).toEqual([ 
         [ 
-          [ 1, 'TL', 16 ], 
-          [ 1, 'TL', 44 ], 
-          [ 1, 'TX', 82 ] 
+          [1, 'TL', 16], 
+          [1, 'TL', 44], 
+          [1, 'TX', 82] 
         ], 
         [  ], 
-        [ [ 0, 'TL', 6 ] ], 
-        [ [ 0, 'TX', 6 ] ], 
-        [  ], 
-        [  ] 
+        [[0, 'TL', 6]], 
+        [[0, 'TX', 6]], 
+        [], 
+        [] 
       ] );
 
   });
@@ -111,12 +111,12 @@ describe('Search index', function() {
           [0,'TL',0],
           [0,'TX', 0] 
         ], 
-        [ [0,'TL', 6] ], 
-        [ [0,'TL', 9] ], 
-        [  ], 
-        [  ], 
-        [  ], 
-        [ [1,'TX', 27] ] 
+        [[0,'TL', 6] ], 
+        [[0,'TL', 9] ], 
+        [], 
+        [], 
+        [], 
+        [[1,'TX', 27]] 
       ]);
 
   });
@@ -133,35 +133,35 @@ describe('Search index', function() {
 
   it('Ensures search does not take too long to execute ', function() {
         // Checks if search can handle a sentences 
-    var expectedResult = [ 
-                            [ [ 1, 'TL', 4 ] ], 
-                            [ [ 0, 'TL', 9 ] ], 
-                            [ [ 0, 'TX', 35 ] ], 
-                            [ [ 1, 'TX', 63 ] ], 
+    var expectedResult = [
+                            [[1, 'TL', 4]], 
+                            [[0, 'TL', 9]], 
+                            [[0, 'TX', 35]], 
+                            [[1, 'TX', 63]], 
                             [ 
-                              [ 1, 'TL', 16 ], 
-                              [ 1, 'TL', 44 ], 
-                              [ 1, 'TX', 82 ] 
+                              [1, 'TL', 16], 
+                              [1, 'TL', 44], 
+                              [1, 'TX', 82] 
                             ], 
-                            [ [ 1, 'TX', 55 ] ], 
-                            [ [ 1, 'TX', 11 ] ], 
+                            [[1, 'TX', 55]], 
+                            [[1, 'TX', 11]], 
                             [ 
-                              [ 0, 'TL', 0 ], 
-                              [ 0, 'TX', 0 ] 
+                              [0, 'TL', 0], 
+                              [0, 'TX', 0] 
                             ], 
                             [ 
-                              [ 1, 'TL', 16 ], 
-                              [ 1, 'TL', 44 ], 
-                              [ 1, 'TX', 82 ] 
+                              [1, 'TL', 16], 
+                              [1, 'TL', 44], 
+                              [1, 'TX', 82] 
                             ], 
-                            [ [ 0, 'TX', 58 ] ], 
-                            [ [ 0, 'TX', 26 ] ], 
-                            [ [ 0, 'TX', 19 ] ], 
-                            [ [ 0, 'TX', 44 ] ], 
-                            [ [ 1, 'TX', 27 ] ], 
-                            [ [ 1, 'TX', 31 ] ], 
-                            [ [ 1, 'TX', 48 ] ], 
-                            [ [ 1, 'TX', 37 ] ] 
+                            [[0, 'TX', 58]], 
+                            [[0, 'TX', 26]], 
+                            [[0, 'TX', 19]], 
+                            [[0, 'TX', 44]], 
+                            [[1, 'TX', 27]], 
+                            [[1, 'TX', 31]], 
+                            [[1, 'TX', 48]], 
+                            [[1, 'TX', 37]] 
                           ];
     expect(indexObj.searchIndex(testArray)).toEqual(expectedResult);
 
