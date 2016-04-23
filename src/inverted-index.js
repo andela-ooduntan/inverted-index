@@ -15,12 +15,11 @@ class InvertedIndex {
     // FIXME: shouldn't save references to this
     var _this = this;
     // Call the function that read the JSON file asyn. 
-    this.readJSONfile(filepath, function(jsonData) {
+    this.readJSONfile(filepath, function (jsonData) {
       // Call the function that helps create the index of the file 
       _this.getIndex(jsonData);
       callback();
     });
-
   }
 
   // Reads the JSON file async.
@@ -35,7 +34,7 @@ class InvertedIndex {
       xmlhttp = new window.ActiveXObject('Microsoft.XMLHTTP');
     }
 
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function () {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
         this.bookObject = JSON.parse(xmlhttp.responseText);
         callback(this.bookObject);
